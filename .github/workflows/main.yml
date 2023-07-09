@@ -1,0 +1,34 @@
+name: Greening V1
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config user.name "${{ secrets.GIT_USER_NAME }}"
+          git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date +'%b %d, %Y %H:%M:%S')"
+
+      - name: Update README.md
+        run: |
+          echo "Last updated: ${{ steps.timestamp.outputs.timestamp }}" > README.md
+          git add README.md
+
+      - name: Commit and Push
+        run: |
+          git add README.md
+          git commit -m "${{ steps.timestamp.outputs.timestamp }}"
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
