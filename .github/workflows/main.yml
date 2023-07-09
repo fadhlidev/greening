@@ -20,7 +20,7 @@ jobs:
 
       - name: Generate timestamp
         id: timestamp
-        run: echo "::set-output name=timestamp::$(date +'%b %d, %Y %H:%M:%S')"
+        run: echo "timestamp=$(date +'%b %d, %Y %H:%M:%S')" >> $GITHUB_OUTPUT
 
       - name: Update README.md
         run: |
